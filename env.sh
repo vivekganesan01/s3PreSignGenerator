@@ -2,3 +2,4 @@
 
 export ACCESS_ID=****
 export SECRET_KEY=****
+export REGION=****

@@ -16,16 +16,19 @@ import (
 
 var awsAccessID string
 var awsSecretKey string
+var region string
 
 // checkCreds checks env var for aws cred
 func checkCreds() {
 	ac, acok := os.LookupEnv("ACCESS_ID")
 	sk, skok := os.LookupEnv("SECRET_KEY")
-	if acok && skok {
+	re, reok := os.LookupEnv("REGION")
+	if acok && skok && reok {
 		awsAccessID = ac
 		awsSecretKey = sk
+		region = re
 	} else {
-		fmt.Println("Fatal Error: Please make sure to define ACCESS_ID & SECRET_KEY as env variable before execution.")
+		fmt.Println("Fatal Error: Please make sure to define ACCESS_ID & SECRET_KEY & REGION as env variable before execution.")
 		os.Exit(1)
 	}
 }
@@ -34,7 +37,7 @@ func checkCreds() {
 func awsActiveSession() (source *session.Session) {
 	fmt.Println("* - Getting the active session for aws")
 	sourceSession, _ := session.NewSession(&aws.Config{
-		Region:      aws.String("eu-west-1"),
+		Region:      aws.String(region),
 		Credentials: credentials.NewStaticCredentials(awsAccessID, awsSecretKey, ""),
 	})
 	return sourceSession
